@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
@@ -73,19 +74,14 @@ export class UsersService {
   }
 
 
-  async update({
-    data
-  }: {
-    data: UserUpdateDto;
-    userToken: string;
-  }) {
+  async update( data: {data: UserUpdateDto;user: string;}) 
+  {
     try {
-      let userId;
     
 
       const existingUser = await this.prisma.user.findUnique({
         where: {
-          id: userId.sub
+          id: data.user
         },
       });
 
@@ -103,6 +99,85 @@ export class UsersService {
       return {
         user,
       };
+    } catch (error) {
+      console.log(error);
+      return new InternalServerErrorException();
+    }
+  }
+
+  async confirmPresense(data : any) 
+  {
+    try {
+    
+
+      const existingUser = await this.prisma.user.findUnique({
+        where: {
+          phone: data.phone.phone
+        },
+      });
+
+      if (!existingUser) {
+        throw new UnauthorizedException('User not found');
+      }
+
+
+      let value = existingUser.isConfirmed ? false : true
+
+      const user = await this.prisma.user.update({
+        data : {
+          isConfirmed : value
+        },
+        where: {
+          id: existingUser.id,
+        },
+      });
+
+      return {
+        user,
+      };
+    } catch (error) {
+      console.log(error);
+      return new InternalServerErrorException();
+    }
+  }
+
+  async login(data: { phone: string }) {
+    try {
+
+      const user = await this.prisma.user.findUnique({
+        where: {
+          phone: data.phone,
+        },
+      });
+
+      if(!user?.id){
+        return new BadRequestException("não foi possivél achar esse cadastro")
+      }
+
+      return {
+        user
+      };
+
+    } catch (error) {
+      console.log(error);
+      return new InternalServerErrorException();
+    }
+  }
+  
+  async getConfirmed({ userToken }: { userToken: string }) {
+    try {
+
+
+      const users = await this.prisma.user.findMany({
+        where: {
+          isConfirmed: true,
+        },
+      });
+
+      return {
+        data : users
+      };
+
     } catch (error) {
       console.log(error);
       return new InternalServerErrorException();

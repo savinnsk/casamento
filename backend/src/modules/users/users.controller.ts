@@ -4,6 +4,7 @@ import {
   Get,
   Post,
   Put,
+  Query,
   Req,
   Res,
 } from '@nestjs/common';
@@ -11,7 +12,6 @@ import { UsersService } from './users.service';
 import { UserCreateDto, UserUpdateDto } from './dto';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
   ApiCreatedResponse,
   ApiOperation,
   ApiTags,
@@ -39,7 +39,7 @@ export class UsersController {
     }
   }
 
-  @ApiBearerAuth()
+
   @Put()
   @ApiOperation({ summary: 'update user' })
   @ApiCreatedResponse({
@@ -47,12 +47,11 @@ export class UsersController {
     description: 'user updated successfully',
   })
   @ApiUnauthorizedResponse({ status: 401, description: 'Not Authorized' })
-  async update(@Body() data: UserUpdateDto, @Req() req) {
-    const userToken = req.headers['authorization'].split(' ')[1];
-    return await this.usersService.update({ data, userToken });
+  async update(@Body() data: UserUpdateDto, @Query() user) {
+    return await this.usersService.update({ data, user });
   }
 
-  @ApiBearerAuth()
+ 
   @Get()
   @ApiOperation({ summary: 'get user logged' })
   @ApiCreatedResponse({
@@ -60,9 +59,46 @@ export class UsersController {
     description: 'get user successfully',
   })
   @ApiUnauthorizedResponse({ status: 401, description: 'Not Authorized' })
-  async get(@Req() req) {
-    const userToken = req.headers['authorization'].split(' ')[1];
-    return await this.usersService.getUser({ userToken });
+  async get(@Query() user) {
+    return await this.usersService.getUser(user);
+  }
+
+
+
+  @Post("login")
+  @ApiOperation({ summary: 'login' })
+  @ApiCreatedResponse({
+    status: 200,
+    description: 'login',
+  })
+  @ApiUnauthorizedResponse({ status: 401, description: 'Not Authorized' })
+    async login(@Body() data : {phone : string }) {
+    return await this.usersService.login(data);
+  }
+
+  
+  @Put("confirm")
+  @ApiOperation({ summary: 'update user' })
+  @ApiCreatedResponse({
+    status: 200,
+    description: 'confirm presense',
+  })
+  @ApiUnauthorizedResponse({ status: 401, description: 'Not Authorized' })
+  async confirm(@Query() phone) {
+
+    return await this.usersService.confirmPresense({phone});
+  }
+
+  
+  @Get("getConfirmed")
+  @ApiOperation({ summary: 'get user logged' })
+  @ApiCreatedResponse({
+    status: 200,
+    description: 'get user successfully',
+  })
+  @ApiUnauthorizedResponse({ status: 401, description: 'Not Authorized' })
+  async getConfirmed(@Query() user) {
+    return await this.usersService.getConfirmed(user);
   }
 
 

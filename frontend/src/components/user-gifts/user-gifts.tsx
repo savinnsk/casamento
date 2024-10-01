@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react"
-import { getGiftsAvailable , sendGifts } from "../../service/gifts-service"
+import { getUserGiftsAvailable ,cancelGifts } from "../../service/gifts-service"
 import "./index.css"
 import { useStore } from "../../hooks/store";
-import ColorPalette from "../color-pallet/color-pallet";
 
 interface Gift {
     id: string; 
     name: string;
 }
-export function GiftList(){
+export function UserGift(){
 
     const [gifts, setGifts] = useState<Gift[]>([]);
     const [selectedGifts, setSelectedGifts] = useState<Gift[]>([]);;
@@ -17,9 +16,8 @@ export function GiftList(){
     useEffect(() => {
         const loadGifts = async () => {
             try {
-                const result = await getGiftsAvailable();
-             
-                setGifts(result);
+                const result = await getUserGiftsAvailable(user);
+                setGifts(result.userGifts);
             } catch (error) {
                 console.error("Error loading gifts:", error);
             }
@@ -38,9 +36,9 @@ export function GiftList(){
 
     const handleSubmit = async () => {
         try {
-            const result = await sendGifts({user, gifts : selectedGifts})
-            
-            setGifts(result.gifts)
+            const result = await cancelGifts({user, gifts : selectedGifts})
+            const gifts = await getUserGiftsAvailable(user);
+            setGifts(gifts)
             setUser(result.user)
 
         } catch (error) {
@@ -50,9 +48,11 @@ export function GiftList(){
 
     return (
         <div className="container-gifts">
-             <ColorPalette/>
+       
              <p>selecione o presente que deseja levar</p>
-             <button onClick={handleSubmit}>Enviar</button>
+           {selectedGifts.length > 0 && (<button  onClick={handleSubmit}>Cancelar</button>)  } 
+           {selectedGifts.length == 0 && (<button  style={{    pointerEvents: "none", 
+             opacity: 0.5 /* Diminui a opacidade para parecer desativado */}}>Sem items</button>)  } 
             {gifts.map((item : any) => (
                 <div key={item.id} className="gift-items">
                     <label>

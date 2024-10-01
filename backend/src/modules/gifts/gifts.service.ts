@@ -44,18 +44,16 @@ export class giftsService {
   }
 
 
-  async listAllgifts({ userToken }: { userToken: string }) {
+  async listAllgiftsAvailable() {
     try {
 
+      const gifts = await this.prismaService.gift.findMany({
+        where : {
+          isAvaliable : true
+        }
+      });
 
-      const gifts = await this.prismaService.gift.findMany();
-
-      const giftsWithOwnership = gifts.map((gift) => ({
-        id: gift.id,
-        name: gift.name,
-      }));
-
-      return giftsWithOwnership;
+      return gifts;
     } catch (error) {
       return new InternalServerErrorException();
     }
@@ -71,4 +69,104 @@ export class giftsService {
       return new InternalServerErrorException();
     }
   }
+
+  
+  async send(data: {user : any ,gifts : any}) {
+    try {
+    
+
+      data.gifts.forEach(async (gift) => {
+      
+      await this.prismaService.gift.update({ data : {userId : data.user.id , isAvaliable : false},
+           where: { 
+            id: gift.id,
+           },
+          });
+
+      });
+
+      const userGifts = await this.prismaService.gift.findMany({
+        where : {
+          userId : data.user.id
+        }
+      })
+
+      console.log(userGifts)
+
+      const user = await this.prismaService.user.update({data : {userGifts : userGifts.length},
+        where: {
+          id: data.user.id,
+        },
+      });
+
+      console.log(user)
+      return  {
+      user : user,
+      gifts : await this.listAllgiftsAvailable()
+    
+    }
+
+    } catch (error) {
+      return new InternalServerErrorException();
+    }
+  }
+
+  async cancelUserGifts(data: {user : any ,gifts : any}) {
+    try {
+    
+
+      data.gifts.forEach(async (gift) => {
+      
+      await this.prismaService.gift.update({ data : {userId : null , isAvaliable : true},
+           where: { 
+            id: gift.id,
+           },
+          });
+
+      });
+
+      const userGifts = await this.prismaService.gift.findMany({
+        where : {
+          userId : data.user.id
+        }
+      })
+
+
+      const user = await this.prismaService.user.update({data : {userGifts : userGifts.length},
+        where: {
+          id: data.user.id,
+        },
+      });
+
+      return  {
+      user : user,
+      gifts : await this.listAllgiftsAvailable()
+    
+    }
+
+    } catch (error) {
+      return new InternalServerErrorException();
+    }
+  }
+
+  async getUserGifts(data: {user : any}) {
+    try {
+      console.log("ge", data)
+      const userGifts = await this.prismaService.gift.findMany({
+        where : {
+          userId : data.user.id
+        }
+      })
+  
+      return  {
+      userGifts : userGifts
+    
+    }
+
+    } catch (error) {
+      return new InternalServerErrorException();
+    }
+  }
+
+  
 }

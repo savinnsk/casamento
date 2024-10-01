@@ -13,8 +13,9 @@ datasource db {
 model User {
     id String @id @default(uuid())
     name String
-    phone String
+    phone String @unique
     isConfirmed Boolean
+    userGifts Int?
 
     @@map("users")
 }

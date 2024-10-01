@@ -1,0 +1,21 @@
+.color-palette {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.color-circle {
+    width: 40px; /* Tamanho do círculo */
+    height: 40px; /* Tamanho do círculo */
+    border-radius: 50%; /* Círculo */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+}
+
+.color-circle:hover {
+    transform: scale(1.1); /* Aumenta o círculo ao passar o mouse */
+}
+
+.pallet-container{
+    display: block;
+}

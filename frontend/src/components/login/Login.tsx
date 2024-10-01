@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import './index.css'
 import * as Yup from 'yup';
+import { LoginUser } from '../../service/user-provider';
+import { useStore } from '../../hooks/store';
 
 const celularRegex = /^\(\d{2}\) \d{5}-\d{4}$/;
 
@@ -14,6 +16,9 @@ export function Login(){
     const [celular, setCelular] = useState('');
     const [errors, setErrors] = useState('');
 
+
+    const {setUser} = useStore();
+
     const handleInputChange = (e: any) => {
         const input = e.target.value;
         const apenasNumeros = input.replace(/\D/g, '');
@@ -25,7 +30,13 @@ export function Login(){
         e.preventDefault();
         try {
             await schema.validate({ celular });
+            const cleanedPhone = celular.replace(/\D/g, '');
+            const user = await LoginUser({phone : cleanedPhone})
             console.log('Validação bem-sucedida!');
+    
+    
+            setUser(user.user)
+            localStorage.setItem("user",JSON.stringify(user))
             setErrors('');
         } catch (err : any) {
             setErrors(err.errors[0]); 
@@ -42,16 +53,17 @@ export function Login(){
     return (
         <div className="LoginContainer">
             <form onSubmit={handleSubmit}>
+                <p>Digite Seu Celular</p>
                 <div>
-                    Celular: 
                     <input 
                         type="text" 
                         value={celular} 
-                        onChange={handleInputChange} 
+                        onChange={handleInputChange}
+                        placeholder='(DD)' 
                     />
                 </div>
                 {errors && <div className="error">{errors}</div>}
-                <button type="submit">Enviar</button>
+                <button type="submit">Login</button>
             </form>
         </div>
     );

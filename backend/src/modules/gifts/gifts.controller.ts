@@ -10,7 +10,6 @@ import {
 import { giftsService } from './gifts.service';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
   ApiCreatedResponse,
   ApiOperation,
   ApiParam,
@@ -24,7 +23,7 @@ import { CreategiftDto } from './dto';
 export class giftsController {
   constructor(private readonly giftsService: giftsService) {}
 
-  @ApiBearerAuth()
+
   @Post()
   @ApiOperation({ summary: 'create a new gift' })
   @ApiCreatedResponse({
@@ -41,22 +40,19 @@ export class giftsController {
     });
   }
 
-  @ApiBearerAuth()
+
   @Get()
   @ApiOperation({ summary: 'get all gifts' })
   @ApiCreatedResponse({
     status: 201,
     description: 'get all gift successfully',
   })
-  @ApiUnauthorizedResponse({ status: 401, description: 'Not Authorized' })
-  async getAll(@Request() req: any) {
-    const userToken = req.headers['authorization'].split(' ')[1];
-    return await this.giftsService.listAllgifts({
-      userToken: userToken,
-    });
+  async getAllAvailable(@Request() req: any) {
+
+    return await this.giftsService.listAllgiftsAvailable();
   }
 
-  @ApiBearerAuth()
+
   @Delete(':id')
   @ApiParam({ name: 'id', type: 'string' } as any)
   @ApiOperation({ summary: 'delete a gift' })
@@ -71,4 +67,61 @@ export class giftsController {
       id
     });
   }
+
+
+
+  @Post("send")
+  @ApiOperation({ summary: 'create a new gift' })
+  @ApiCreatedResponse({
+    status: 201,
+    description: 'New gift created successfully',
+  })
+  @ApiBadRequestResponse({ status: 400, description: 'Invalid parameters' })
+  @ApiUnauthorizedResponse({ status: 401, description: 'Not Authorized' })
+  async send(@Request() req: any, @Body() data: any) {
+
+    return await this.giftsService.send({
+      user: data.user,
+      gifts: data.gifts,
+    });
+  }
+
+  
+  @Post("cancel")
+  @ApiOperation({ summary: 'create a new gift' })
+  @ApiCreatedResponse({
+    status: 201,
+    description: 'New gift created successfully',
+  })
+  @ApiBadRequestResponse({ status: 400, description: 'Invalid parameters' })
+  @ApiUnauthorizedResponse({ status: 401, description: 'Not Authorized' })
+  async cancel(@Request() req: any, @Body() data: any) {
+
+    return await this.giftsService.cancelUserGifts({
+      user: data.user,
+      gifts: data.gifts,
+    });
+  }
+
+
+  
+  @Post("user")
+  @ApiOperation({ summary: 'create a new gift' })
+  @ApiCreatedResponse({
+    status: 201,
+    description: 'New gift created successfully',
+  })
+  @ApiBadRequestResponse({ status: 400, description: 'Invalid parameters' })
+  @ApiUnauthorizedResponse({ status: 401, description: 'Not Authorized' })
+  async getUser(@Request() req: any, @Body() data: any) {
+
+    console.log("kk",data)
+    return await this.giftsService.getUserGifts({
+      user: data
+    });
+  }
+
+
+
+
 }
