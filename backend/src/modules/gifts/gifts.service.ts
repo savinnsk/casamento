@@ -13,7 +13,6 @@ export class giftsService {
     data
   }: {
     data: CreategiftDto;
-    userToken: string;
   }) {
     try {
 
@@ -91,7 +90,6 @@ export class giftsService {
         }
       })
 
-      console.log(userGifts)
 
       const user = await this.prismaService.user.update({data : {userGifts : userGifts.length},
         where: {
@@ -151,7 +149,7 @@ export class giftsService {
 
   async getUserGifts(data: {user : any}) {
     try {
-      console.log("ge", data)
+  
       const userGifts = await this.prismaService.gift.findMany({
         where : {
           userId : data.user.id
@@ -159,6 +157,35 @@ export class giftsService {
       })
   
       return  {
+      userGifts : userGifts
+    
+    }
+
+    } catch (error) {
+      return new InternalServerErrorException();
+    }
+  }
+
+
+  async  getGiftOwner(data) {
+    try {
+  
+      const userGifts = await this.prismaService.gift.findMany({
+        where : {
+          userId : data
+        }
+      })
+
+
+      const user = await this.prismaService.gift.findUnique({
+        where : {
+          id : data
+        }
+      })
+      console.log(userGifts)
+  
+      return  {
+        user ,
       userGifts : userGifts
     
     }

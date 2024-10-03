@@ -53,6 +53,25 @@ export class UsersService {
     }
   }
 
+  async getAll() {
+    try {
+
+      
+
+      const users = await this.prisma.user.findMany();
+
+    
+
+      return {
+        users
+      };
+
+    } catch (error) {
+      console.log(error);
+      return new InternalServerErrorException();
+    }
+  }
+
   async getAllConfirmed({ userToken }: { userToken: string }) {
     try {
 

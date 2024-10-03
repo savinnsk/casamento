@@ -7,8 +7,11 @@ export default function StoreProvider({
 } : {children : React.ReactNode}){
 
     const [user,setUser] = useState({})
-    const [homePage,setHomePage] = useState(false)
+    const [homePage,setHomePage] = useState(true)
     const [userPage,setUserPage] = useState(false)
+    const [createUserPage,setCreateUserPage] = useState()
+    const [showUserPage,setShowUserPage] = useState()
+    const [createGiftPage,setCreateGiftPage] = useState()
     const [loginPage,setLoginPage] = useState()
 
 
@@ -16,7 +19,11 @@ export default function StoreProvider({
         user,setUser,
         homePage,setHomePage,
         userPage,setUserPage,
-        loginPage,setLoginPage}}>
+        loginPage,setLoginPage,
+        createUserPage,setCreateUserPage,
+        createGiftPage,setCreateGiftPage,
+        showUserPage,setShowUserPage
+        }}>
         {children}
     </StoreContext.Provider>
 }

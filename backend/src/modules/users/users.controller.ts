@@ -64,6 +64,19 @@ export class UsersController {
   }
 
 
+  @Get("all")
+  @ApiOperation({ summary: 'get user logged' })
+  @ApiCreatedResponse({
+    status: 200,
+    description: 'get user successfully',
+  })
+  @ApiUnauthorizedResponse({ status: 401, description: 'Not Authorized' })
+  async getAll(@Query() user) {
+    return await this.usersService.getAll();
+  }
+
+
+
 
   @Post("login")
   @ApiOperation({ summary: 'login' })

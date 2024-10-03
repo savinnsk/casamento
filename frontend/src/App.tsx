@@ -7,7 +7,10 @@ import {ConfirmUserPresence } from './service/user-provider';
 import { GiftList } from './components/lista-presentes/ListaPresentes';
 import { Header } from './components/header/header';
 import { UserGift } from './components/user-gifts/user-gifts';
-import ColorPalette from './components/color-pallet/color-pallet';
+
+import { CreateUser } from './components/create-user/create-user';
+import { CreateGift } from './components/create-gift/create-gift';
+import { UserList } from './components/show-users/show-users';
 
 function App() {
   return (
@@ -18,7 +21,7 @@ function App() {
 }
 
 function MainContent() {
-  const { user ,setUser,homePage,userPage} = useStore();
+  const { user ,setUser,homePage,userPage ,createUserPage , createGiftPage, showUserPage} = useStore();
 
   const [errors, setErrors] = useState('');
   
@@ -49,7 +52,7 @@ function MainContent() {
       )} 
 
       { user.name && <Header/>} 
-       { (user.name && !userPage) && (<>
+       { (user.name && homePage) && (<>
         <h2 className='presentation'>Olá {user.name}! sua presença
           {user.isConfirmed ? 
              <span> está <span 
@@ -78,6 +81,10 @@ function MainContent() {
       )}
 
       {  (userPage && !homePage)&& ( <UserGift/> ) }
+
+      {  createUserPage && ( <CreateUser/> ) }
+      {  createGiftPage && ( <CreateGift/> ) }
+      {  showUserPage && ( <UserList/> ) }
     </>
   );
 }

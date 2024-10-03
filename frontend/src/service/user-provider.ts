@@ -18,6 +18,34 @@ export async function LoginUser(data: UserLogin) {
     }
 }
 
+export async function create(data: any) {
+    try {
+        const response = await axiosInstance.post('/users', data); 
+        return response.data; 
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            throw new Error(error.response?.data?.message || 'Erro para criar');
+        } else {
+            throw new Error('Erro desconhecido');
+        }
+    }
+}
+
+
+
+export async function getUsers() {
+    try {
+        const response = await axiosInstance.get('/users/all'); 
+        return response.data; 
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            throw new Error(error.response?.data?.message || 'Erro para pegar usuarios');
+        } else {
+            throw new Error('Erro desconhecido');
+        }
+    }
+}
+
 
 export async function ConfirmUserPresence(phone: { phone : string}) {
     try {

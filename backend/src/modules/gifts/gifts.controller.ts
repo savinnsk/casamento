@@ -31,13 +31,8 @@ export class giftsController {
     description: 'New gift created successfully',
   })
   @ApiBadRequestResponse({ status: 400, description: 'Invalid parameters' })
-  @ApiUnauthorizedResponse({ status: 401, description: 'Not Authorized' })
   async create(@Request() req: any, @Body() creategiftDto: CreategiftDto) {
-    const userToken = req.headers['authorization'].split(' ')[1];
-    return await this.giftsService.create({
-      userToken: userToken,
-      data: creategiftDto,
-    });
+    return await this.giftsService.create({data: creategiftDto});
   }
 
 
@@ -66,6 +61,18 @@ export class giftsController {
     return await this.giftsService.deletegift({
       id
     });
+  }
+
+  @Post("owner")
+  @ApiOperation({ summary: 'get all gifts' })
+  @ApiCreatedResponse({
+    status: 201,
+    description: 'get all gift successfully',
+  })
+  async getGiftOwner(@Body() data: any) {
+
+    console.log(data)
+    return await this.giftsService.getGiftOwner(data.phone);
   }
 
 
@@ -115,7 +122,7 @@ export class giftsController {
   @ApiUnauthorizedResponse({ status: 401, description: 'Not Authorized' })
   async getUser(@Request() req: any, @Body() data: any) {
 
-    console.log("kk",data)
+
     return await this.giftsService.getUserGifts({
       user: data
     });

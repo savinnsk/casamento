@@ -27,6 +27,21 @@ export async function sendGifts( data : {gifts : any, user:any} ) {
     }
 }
 
+
+export async function createGifts( data : any ) {
+    try {
+        console.log(data)
+        const response = await axiosInstance.post('/gifts',data); 
+        return response.data; 
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            throw new Error(error.response?.data?.message || 'Erro ao criar gift');
+        } else {
+            throw new Error('Erro desconhecido');
+        }
+    }
+}
+
 export async function  getUserGiftsAvailable( data : { user:any} ) {
     try {
         const response = await axiosInstance.post('/gifts/user',data); 
@@ -40,6 +55,23 @@ export async function  getUserGiftsAvailable( data : { user:any} ) {
         }
     }
 }
+
+
+export async function  showUserGiftsService( data : any ) {
+    try {
+        const response = await axiosInstance.post('/gifts/owner',data); 
+    
+        return response; 
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            throw new Error(error.response?.data?.message || 'Erro ao get gift user owner');
+        } else {
+            throw new Error('Erro desconhecido');
+        }
+    }
+}
+
+
 
 
 export async function cancelGifts( data : {gifts : any, user:any} ) {
