@@ -15,6 +15,7 @@ import { giftsModule } from './modules/gifts/gifts.module';
     }),
     UsersModule,
     giftsModule,
+    
   ],
   controllers: [],
 })
