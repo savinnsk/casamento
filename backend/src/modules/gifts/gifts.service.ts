@@ -177,7 +177,7 @@ export class giftsService {
       })
 
 
-      const user = await this.prismaService.gift.findUnique({
+      const user = await this.prismaService.user.findUnique({
         where : {
           id : data
         }
