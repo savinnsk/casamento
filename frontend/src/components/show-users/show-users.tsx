@@ -4,11 +4,12 @@ import  { useEffect, useState } from 'react';
 
 import { getUsers } from '../../service/user-provider';
 import { UserCard } from './user-card';
+import { useStore } from "../../hooks/store";
 
 export const UserList = () => {
-    const [users, setUsers] = useState<any[]>([]);
+    const {users, setUsers} = useStore();
     const [error, setError] = useState<string | null>(null);
-
+    
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -29,7 +30,7 @@ export const UserList = () => {
             <h2>Usuários</h2>
             {error && <p className="error-message">{error}</p>}
             <div className="user-cards">
-                {users.map((user) => (
+                {users.map((user : any) => (
                     <UserCard
                         key={user.id}
                         id={user.id}

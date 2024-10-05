@@ -2,10 +2,10 @@
 import './index.css'; // Certifique-se de criar este arquivo CSS
 
 const ColorPalette = () => {
-    const colors = ['#ffffff', '#000000', '#f1c07e', '#f6e8f6'];
+    const colors = ['#ffffff', '#000000', '#f1c07e',];
 
     return (
-        <div className='pallet-container'> <p>Paleta de Cores</p>
+        <div className='pallet-container'> <p>Paleta de Cores Da Casa</p>
                 <div className="color-palette">
 
 

@@ -63,7 +63,7 @@ export function Login(){
                     />
                 </div>
                 {errors && <div className="error">{errors}</div>}
-                <button type="submit">Login</button>
+                <button className='btnlogin' type="submit">Entrar</button>
             </form>
         </div>
     );

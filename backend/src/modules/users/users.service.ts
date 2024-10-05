@@ -203,4 +203,21 @@ export class UsersService {
     }
   }
 
+
+  async deleteUser(user) {
+  
+ 
+    const result =  await this.prisma.user.delete({where : {id : user.user}});
+ 
+    if (!result) {
+      throw new InternalServerErrorException('Internal Error');
+    }
+
+    return {
+      status: 200,
+      message: 'user deleted with success',
+      data : await this.getAll()
+    };
+  }
+
 }

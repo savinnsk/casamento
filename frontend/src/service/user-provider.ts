@@ -59,3 +59,17 @@ export async function ConfirmUserPresence(phone: { phone : string}) {
         }
     }
 }
+
+export async function deleteUser(user :any) {
+    try {
+        const response = await axiosInstance.post('/users/delete',user); 
+        return response.data; 
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            throw new Error(error.response?.data?.message || 'Erro ao fazer login');
+        } else {
+            throw new Error('Erro desconhecido');
+        }
+    }
+}
+

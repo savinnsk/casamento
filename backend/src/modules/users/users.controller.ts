@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Post,
   Put,
@@ -114,5 +115,18 @@ export class UsersController {
     return await this.usersService.getConfirmed(user);
   }
 
+
+
+  @Post("delete")
+  @ApiOperation({ summary: 'get user logged' })
+  @ApiCreatedResponse({
+    status: 200,
+    description: 'get user successfully',
+  })
+  @ApiUnauthorizedResponse({ status: 401, description: 'Not Authorized' })
+  async delete(@Body() user) {
+    console.log(user)
+    return await this.usersService.deleteUser(user);
+  }
 
 }

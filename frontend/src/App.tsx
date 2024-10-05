@@ -44,9 +44,6 @@ function MainContent() {
   
       { (!user.name ) && (
         <>
-          <h1>
-            Convite Para Culto de Comemoração ao Casamento <br />
-          </h1>
           <Login />
         </>
       )} 
